@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tianna Crafts — Join the list</title>
+<meta name="description" content="Join the Tianna Crafts handmade world for market dates, new crochet drops, craft kits & gentle updates.">
+
+<!-- ====== CONFIG: point this at your deployed Cloudflare Worker ====== -->
+<script>
+  // After you deploy the Worker, paste its URL here (e.g. https://tianna-subscribe.<your-subdomain>.workers.dev)
+  window.SUBSCRIBE_ENDPOINT = "REPLACE_WITH_YOUR_WORKER_URL";
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Grand+Hotel&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ── Tianna Crafts palette ──────────────────────────────────
+     Grounded in the logo + background art (sampled), so the page,
+     the email and the assets all read as one brand.
+       cool blush + cream pinks  …  warm RED as the signature accent  */
+  :root {
+    --blush:    #F4D3E2; /* canvas — bg base color */
+    --cream:    #FFFCFD; /* card surface (near-white, faint pink) */
+    --fill:     #FBEEF3; /* soft pink fill: inputs, notes, badge */
+    --hairline: #EFD6E0; /* 1px borders */
+    --rose:     #AE5080; /* deep rose from the logo bow — headings/brand */
+    --rose-2:   #B96A90; /* lighter rose — labels, note text */
+    --eyebrow:  #C58AA8; /* muted pink caption */
+    --body:     #8C6E78; /* body copy */
+    --faint:    #C2A3B2; /* fine print */
+    --pink:     #F291BE; /* bright logo pink — playful accents */
+    --red-top:  #E0506A; /* CTA gradient top */
+    --red-bot:  #C42A45; /* CTA gradient bottom + solid red accent */
+    --error:    #C0455F;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+
+  @keyframes tc-float { 0%,100% { transform: translateY(0) rotate(var(--r,0deg)); } 50% { transform: translateY(-12px) rotate(var(--r,0deg)); } }
+  @keyframes tc-pop  { 0% { transform: scale(0.7); opacity: 0; } 60% { transform: scale(1.05); } 100% { transform: scale(1); opacity: 1; } }
+  @keyframes tc-rise { 0% { transform: translateY(16px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+
+  .tc-stage {
+    position: relative; min-height: 100vh; width: 100%;
+    display: flex; align-items: center; justify-content: center;
+    padding: 64px 40px; overflow: hidden;
+    font-family: 'Quicksand', sans-serif;
+    background-color: var(--blush);
+    /* hand-drawn pink grid + hearts/X/O — a seamless tile cropped to whole grid cells,
+       so it repeats (not stretched) and reads as one continuous pattern */
+    background-image: url('assets/bg-pattern.png');
+    background-repeat: repeat;
+    background-size: 510px auto; /* tile is 1020x1836; half-scale keeps cells delicate */
+    background-position: center top;
+  }
+
+  /* decorative motifs */
+  .tc-motifs { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+  .tc-motifs svg { position: absolute; }
+
+  .tc-card {
+    position: relative; width: 100%; max-width: 540px;
+    background: var(--cream); border: 1px solid var(--hairline); border-radius: 28px;
+    box-shadow: 0 30px 70px rgba(150,90,86,.14); z-index: 2;
+  }
+  .tc-card--form { padding: 56px 52px 48px; }
+  .tc-card--done { padding: 66px 52px 58px; text-align: center; animation: tc-rise .5s ease both; }
+
+  .tc-logo-wrap { display: flex; flex-direction: column; align-items: center; margin-bottom: 26px; }
+  .tc-logo {
+    width: 164px; height: 164px; border-radius: 50%; object-fit: cover;
+    box-shadow: 0 10px 26px rgba(150,90,86,.18); background: var(--fill);
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
+  }
+  .tc-logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .tc-logo-fallback {
+    font-family: 'Grand Hotel', cursive; font-size: 30px; line-height: 1.05;
+    color: var(--rose); text-align: center; padding: 12px;
+  }
+  .tc-tagline { margin-top: 14px; font-size: 11px; letter-spacing: 3.5px; text-transform: uppercase; color: var(--eyebrow); font-weight: 600; }
+
+  .tc-h1 { margin: 0 0 12px; text-align: center; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500; font-size: 38px; color: var(--rose); line-height: 1.1; }
+  .tc-sub { margin: 0 auto 32px; text-align: center; max-width: 380px; font-size: 16px; line-height: 1.6; color: var(--body); }
+
+  .tc-label { display: block; margin-bottom: 9px; font-size: 12px; letter-spacing: 1.2px; text-transform: uppercase; font-weight: 700; color: var(--rose-2); padding-left: 4px; }
+  .tc-input {
+    width: 100%; padding: 18px 22px; font-family: 'Quicksand', sans-serif; font-size: 19px;
+    color: #5C4A48; background: var(--fill); border: 1.5px solid var(--hairline); border-radius: 16px; outline: none;
+    transition: border-color .18s, background .18s;
+  }
+  .tc-input:focus { border-color: var(--rose); background: #FFFDFC; }
+  .tc-input--name  { margin-bottom: 22px; }
+  .tc-input--email { margin-bottom: 20px; }
+
+  .tc-check-row { display: flex; align-items: center; gap: 13px; padding: 4px 4px 2px; margin-bottom: 28px; cursor: pointer; user-select: none; }
+  .tc-check { width: 26px; height: 26px; flex: none; border-radius: 8px; border: 1.5px solid var(--hairline); background: var(--fill); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 15px; font-weight: 700; transition: all .18s; }
+  .tc-check.is-on { border-color: var(--red-bot); background: var(--red-bot); }
+  .tc-check-label { font-size: 15px; color: var(--body); }
+
+  .tc-error { margin: -14px 0 18px; text-align: center; font-size: 14px; color: var(--error); font-weight: 600; }
+
+  .tc-btn {
+    width: 100%; padding: 19px; border: none; border-radius: 16px; cursor: pointer;
+    font-family: 'Quicksand', sans-serif; font-size: 18px; font-weight: 700; color: #fff; letter-spacing: .4px;
+    background: linear-gradient(var(--red-top),var(--red-bot)); box-shadow: 0 14px 28px rgba(196,42,69,.30);
+    transition: transform .12s, box-shadow .12s, opacity .12s;
+  }
+  .tc-btn:hover { transform: translateY(-2px); box-shadow: 0 18px 34px rgba(196,42,69,.38); }
+  .tc-btn:active { transform: translateY(1px); }
+  .tc-btn:disabled { opacity: .65; cursor: default; transform: none; box-shadow: 0 14px 28px rgba(196,42,69,.18); }
+
+  .tc-fineprint { margin: 18px 0 0; text-align: center; font-size: 12.5px; color: var(--faint); }
+
+  .tc-done-logo { margin: 0 auto 18px; width: 148px; height: 148px; animation: tc-pop .6s cubic-bezier(.34,1.56,.64,1) both; }
+  .tc-done-logo .tc-logo { width: 148px; height: 148px; }
+  .tc-h1--done { font-size: 44px; margin: 0 0 16px; }
+  .tc-done-note {
+    display: inline-flex; align-items: center; gap: 10px; margin: 6px 0 32px; padding: 14px 22px;
+    background: var(--fill); border: 1px solid var(--hairline); border-radius: 14px; font-size: 15px; color: var(--rose-2); font-weight: 600;
+  }
+  .tc-reset {
+    padding: 15px 34px; border: 1.5px solid var(--hairline); border-radius: 14px; background: var(--fill); cursor: pointer;
+    font-family: 'Quicksand', sans-serif; font-size: 16px; font-weight: 700; color: var(--rose); transition: all .15s;
+  }
+  .tc-reset:hover { background: #F6E2EC; border-color: var(--rose); }
+
+  [hidden] { display: none !important; }
+
+  @media (max-width: 560px) {
+    .tc-stage { padding: 40px 18px; }
+    .tc-card--form { padding: 40px 28px 36px; }
+    .tc-card--done { padding: 48px 28px 44px; }
+    .tc-h1 { font-size: 32px; }
+    .tc-h1--done { font-size: 36px; }
+  }
+</style>
+</head>
+<body>
+<div class="tc-stage">
+
+  <!-- decorative muted motifs -->
+  <div class="tc-motifs" aria-hidden="true">
+    <svg viewBox="0 0 100 100" width="58" style="left:8%; top:22%; --r:-6deg; animation:tc-float 9s ease-in-out infinite; opacity:.5;"><circle cx="50" cy="50" r="40" fill="#F2C4D9"/><path d="M22 50 Q50 28 78 50 M22 62 Q50 40 78 62 M26 40 Q50 60 74 40" stroke="#CE82A2" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
+    <svg viewBox="0 0 100 100" width="50" style="right:9%; top:26%; --r:5deg; animation:tc-float 11s ease-in-out infinite; opacity:.5;"><circle cx="50" cy="50" r="40" fill="#F4B9CF"/><path d="M22 50 Q50 28 78 50 M22 62 Q50 40 78 62 M26 40 Q50 60 74 40" stroke="#D87FA0" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
+    <svg viewBox="0 0 60 70" width="34" style="left:14%; bottom:16%; --r:8deg; animation:tc-float 10s ease-in-out infinite; opacity:.45;"><path d="M30 8 C30 30 30 40 18 60 M30 8 C30 30 30 40 42 60 M30 22 C24 30 18 33 12 33 M30 30 C36 38 42 41 48 40" stroke="#CE8FA8" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>
+    <svg viewBox="0 0 60 70" width="30" style="right:13%; bottom:18%; --r:-8deg; animation:tc-float 12s ease-in-out infinite; opacity:.45;"><path d="M30 8 C30 30 30 40 18 60 M30 8 C30 30 30 40 42 60 M30 22 C24 30 18 33 12 33 M30 30 C36 38 42 41 48 40" stroke="#CE8FA8" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>
+  </div>
+
+  <!-- ===================== FORM SCREEN ===================== -->
+  <div class="tc-card tc-card--form" id="tc-form-screen">
+    <div class="tc-logo-wrap">
+      <div class="tc-logo" id="tc-logo">
+        <!-- Drop your real logo at assets/logo.png and it replaces this text badge automatically -->
+        <div class="tc-logo-fallback">Tianna<br>Crafts</div>
+      </div>
+      <div class="tc-tagline">Handmade with love</div>
+    </div>
+
+    <h1 class="tc-h1">Thank you for your purchase</h1>
+    <p class="tc-sub">Join our little handmade world for future market dates, new crochet drops, craft kits &amp; gentle updates.</p>
+
+    <form id="tc-form" novalidate>
+      <label class="tc-label" for="tc-name">Your name</label>
+      <input class="tc-input tc-input--name" id="tc-name" type="text" name="name" placeholder="Emma" autocomplete="name">
+
+      <label class="tc-label" for="tc-email">Your email</label>
+      <input class="tc-input tc-input--email" id="tc-email" type="email" name="email" placeholder="emma@email.com" autocomplete="email">
+
+      <div class="tc-check-row" id="tc-check-row" role="checkbox" aria-checked="true" tabindex="0">
+        <div class="tc-check is-on" id="tc-check">✓</div>
+        <span class="tc-check-label">Send me occasional emails from Tianna Crafts</span>
+      </div>
+
+      <div class="tc-error" id="tc-error" hidden></div>
+
+      <button class="tc-btn" id="tc-submit" type="submit">Join the list</button>
+      <p class="tc-fineprint">No spam, ever — just thoughtful handmade things.</p>
+    </form>
+  </div>
+
+  <!-- ===================== SUCCESS SCREEN ===================== -->
+  <div class="tc-card tc-card--done" id="tc-done-screen" hidden>
+    <div class="tc-done-logo">
+      <div class="tc-logo" id="tc-logo-done"><div class="tc-logo-fallback">Tianna<br>Crafts</div></div>
+    </div>
+    <h1 class="tc-h1 tc-h1--done">You're on the list, <span id="tc-firstname">friend</span></h1>
+    <p class="tc-sub">Thank you again for supporting Tianna Crafts.</p>
+    <div class="tc-done-note">✉ A little thank-you note is on its way to your inbox.</div>
+    <div>
+      <button class="tc-reset" id="tc-reset" type="button">Add another customer</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  var formScreen = document.getElementById('tc-form-screen');
+  var doneScreen = document.getElementById('tc-done-screen');
+  var form    = document.getElementById('tc-form');
+  var nameEl  = document.getElementById('tc-name');
+  var emailEl = document.getElementById('tc-email');
+  var errEl   = document.getElementById('tc-error');
+  var checkRow = document.getElementById('tc-check-row');
+  var checkBox = document.getElementById('tc-check');
+  var submitBtn = document.getElementById('tc-submit');
+  var firstNameEl = document.getElementById('tc-firstname');
+  var resetBtn = document.getElementById('tc-reset');
+
+  var subscribe = true;
+
+  // Swap in the real logo if assets/logo.png exists; otherwise keep the text fallback.
+  function tryLogo(container) {
+    var img = new Image();
+    img.onload = function () { container.innerHTML = ''; container.appendChild(img); };
+    img.alt = 'Tianna Crafts';
+    img.src = 'assets/logo.png?v=1';
+  }
+  tryLogo(document.getElementById('tc-logo'));
+  tryLogo(document.getElementById('tc-logo-done'));
+
+  function setError(msg) {
+    if (msg) { errEl.textContent = msg; errEl.hidden = false; }
+    else { errEl.textContent = ''; errEl.hidden = true; }
+  }
+
+  function toggleSub() {
+    subscribe = !subscribe;
+    checkBox.classList.toggle('is-on', subscribe);
+    checkBox.textContent = subscribe ? '✓' : '';
+    checkRow.setAttribute('aria-checked', String(subscribe));
+  }
+  checkRow.addEventListener('click', toggleSub);
+  checkRow.addEventListener('keydown', function (e) {
+    if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggleSub(); }
+  });
+
+  [nameEl, emailEl].forEach(function (el) {
+    el.addEventListener('input', function () { setError(''); });
+  });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    submit();
+  });
+  resetBtn.addEventListener('click', function () {
+    nameEl.value = ''; emailEl.value = '';
+    subscribe = true; checkBox.classList.add('is-on'); checkBox.textContent = '✓';
+    checkRow.setAttribute('aria-checked', 'true');
+    setError('');
+    doneScreen.hidden = true; formScreen.hidden = false;
+    nameEl.focus();
+  });
+
+  function submit() {
+    var name = nameEl.value.trim();
+    var email = emailEl.value.trim();
+    if (!name) { setError('Please add your name above.'); return; }
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+      setError('That email looks a little off — mind checking it?');
+      return;
+    }
+
+    var endpoint = window.SUBSCRIBE_ENDPOINT;
+    setError('');
+    submitBtn.disabled = true;
+    var original = submitBtn.textContent;
+    submitBtn.textContent = 'Sending…';
+
+    fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name, email: email, subscribe: subscribe })
+    })
+    .then(function (res) {
+      return res.json().catch(function () { return {}; }).then(function (data) {
+        if (!res.ok) { throw new Error((data && data.error) || ('Request failed (' + res.status + ')')); }
+        return data;
+      });
+    })
+    .then(function () {
+      var first = name.split(/\s+/)[0] || 'friend';
+      firstNameEl.textContent = first;
+      formScreen.hidden = true; doneScreen.hidden = false;
+    })
+    .catch(function (err) {
+      setError(err.message || 'Something went wrong — please try again.');
+    })
+    .finally(function () {
+      submitBtn.disabled = false;
+      submitBtn.textContent = original;
+    });
+  }
+})();
+</script>
+</body>
+</html>
