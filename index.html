@@ -9,7 +9,7 @@
 <!-- ====== CONFIG: point this at your deployed Cloudflare Worker ====== -->
 <script>
   // After you deploy the Worker, paste its URL here (e.g. https://tianna-subscribe.<your-subdomain>.workers.dev)
-  window.SUBSCRIBE_ENDPOINT = "REPLACE_WITH_YOUR_WORKER_URL";
+  window.SUBSCRIBE_ENDPOINT = "https://tianna-subscribe.hamzamahjoubi221.workers.dev";
 </script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -32,8 +32,10 @@
     --body:     #8C6E78; /* body copy */
     --faint:    #C2A3B2; /* fine print */
     --pink:     #F291BE; /* bright logo pink — playful accents */
-    --red-top:  #E0506A; /* CTA gradient top */
-    --red-bot:  #C42A45; /* CTA gradient bottom + solid red accent */
+    --red-top:  #E0506A; /* bright red accent (checkbox) */
+    --red-bot:  #C42A45; /* bright red accent (checkbox) */
+    --btn:      #7A0900; /* deep oxblood — buttons + main heading */
+    --btn-dark: #5E0700; /* button gradient bottom / press depth */
     --error:    #C0455F;
   }
 
@@ -73,7 +75,7 @@
   .tc-logo-wrap { display: flex; flex-direction: column; align-items: center; margin-bottom: 26px; }
   .tc-logo {
     width: 164px; height: 164px; border-radius: 50%; object-fit: cover;
-    box-shadow: 0 10px 26px rgba(150,90,86,.18); background: var(--fill);
+    box-shadow: 0 12px 28px rgba(122,9,0,.20); background: transparent;
     display: flex; align-items: center; justify-content: center; overflow: hidden;
   }
   .tc-logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -81,24 +83,26 @@
     font-family: 'Grand Hotel', cursive; font-size: 30px; line-height: 1.05;
     color: var(--rose); text-align: center; padding: 12px;
   }
-  .tc-tagline { margin-top: 14px; font-size: 11px; letter-spacing: 3.5px; text-transform: uppercase; color: var(--eyebrow); font-weight: 600; }
+  .tc-tagline { margin-top: 14px; font-size: 11px; letter-spacing: 3.5px; text-transform: uppercase; color: var(--btn); font-weight: 600; }
 
   .tc-h1 { margin: 0 0 12px; text-align: center; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500; font-size: 38px; color: var(--rose); line-height: 1.1; }
+  .tc-h1--thanks { color: var(--btn); }
   .tc-sub { margin: 0 auto 32px; text-align: center; max-width: 380px; font-size: 16px; line-height: 1.6; color: var(--body); }
 
-  .tc-label { display: block; margin-bottom: 9px; font-size: 12px; letter-spacing: 1.2px; text-transform: uppercase; font-weight: 700; color: var(--rose-2); padding-left: 4px; }
+  .tc-label { display: block; margin-bottom: 9px; font-size: 12px; letter-spacing: 1.2px; text-transform: uppercase; font-weight: 700; color: var(--btn); padding-left: 4px; }
   .tc-input {
     width: 100%; padding: 18px 22px; font-family: 'Quicksand', sans-serif; font-size: 19px;
-    color: #5C4A48; background: var(--fill); border: 1.5px solid var(--hairline); border-radius: 16px; outline: none;
-    transition: border-color .18s, background .18s;
+    color: var(--btn); background: var(--fill); border: 1.5px solid var(--hairline); border-radius: 16px; outline: none;
+    transition: border-color .18s, background .18s, box-shadow .18s;
   }
-  .tc-input:focus { border-color: var(--rose); background: #FFFDFC; }
+  .tc-input::placeholder { color: #C9A6B3; }
+  .tc-input:focus { border-color: var(--btn); background: #FFFDFC; box-shadow: 0 0 0 3px rgba(122,9,0,.10); }
   .tc-input--name  { margin-bottom: 22px; }
   .tc-input--email { margin-bottom: 20px; }
 
   .tc-check-row { display: flex; align-items: center; gap: 13px; padding: 4px 4px 2px; margin-bottom: 28px; cursor: pointer; user-select: none; }
   .tc-check { width: 26px; height: 26px; flex: none; border-radius: 8px; border: 1.5px solid var(--hairline); background: var(--fill); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 15px; font-weight: 700; transition: all .18s; }
-  .tc-check.is-on { border-color: var(--red-bot); background: var(--red-bot); }
+  .tc-check.is-on { border-color: var(--btn); background: var(--btn); }
   .tc-check-label { font-size: 15px; color: var(--body); }
 
   .tc-error { margin: -14px 0 18px; text-align: center; font-size: 14px; color: var(--error); font-weight: 600; }
@@ -106,12 +110,12 @@
   .tc-btn {
     width: 100%; padding: 19px; border: none; border-radius: 16px; cursor: pointer;
     font-family: 'Quicksand', sans-serif; font-size: 18px; font-weight: 700; color: #fff; letter-spacing: .4px;
-    background: linear-gradient(var(--red-top),var(--red-bot)); box-shadow: 0 14px 28px rgba(196,42,69,.30);
+    background: linear-gradient(var(--btn),var(--btn-dark)); box-shadow: 0 14px 28px rgba(122,9,0,.30);
     transition: transform .12s, box-shadow .12s, opacity .12s;
   }
-  .tc-btn:hover { transform: translateY(-2px); box-shadow: 0 18px 34px rgba(196,42,69,.38); }
+  .tc-btn:hover { transform: translateY(-2px); box-shadow: 0 18px 34px rgba(122,9,0,.38); }
   .tc-btn:active { transform: translateY(1px); }
-  .tc-btn:disabled { opacity: .65; cursor: default; transform: none; box-shadow: 0 14px 28px rgba(196,42,69,.18); }
+  .tc-btn:disabled { opacity: .65; cursor: default; transform: none; box-shadow: 0 14px 28px rgba(122,9,0,.18); }
 
   .tc-fineprint { margin: 18px 0 0; text-align: center; font-size: 12.5px; color: var(--faint); }
 
@@ -124,9 +128,9 @@
   }
   .tc-reset {
     padding: 15px 34px; border: 1.5px solid var(--hairline); border-radius: 14px; background: var(--fill); cursor: pointer;
-    font-family: 'Quicksand', sans-serif; font-size: 16px; font-weight: 700; color: var(--rose); transition: all .15s;
+    font-family: 'Quicksand', sans-serif; font-size: 16px; font-weight: 700; color: var(--btn); transition: all .15s;
   }
-  .tc-reset:hover { background: #F6E2EC; border-color: var(--rose); }
+  .tc-reset:hover { background: #F6E2EC; border-color: var(--btn); }
 
   [hidden] { display: none !important; }
 
@@ -154,13 +158,12 @@
   <div class="tc-card tc-card--form" id="tc-form-screen">
     <div class="tc-logo-wrap">
       <div class="tc-logo" id="tc-logo">
-        <!-- Drop your real logo at assets/logo.png and it replaces this text badge automatically -->
-        <div class="tc-logo-fallback">Tianna<br>Crafts</div>
+        <img src="assets/logo-email.png" alt="Tianna Crafts" onerror="this.parentElement.innerHTML='&lt;div class=&quot;tc-logo-fallback&quot;&gt;Tianna&lt;br&gt;Crafts&lt;/div&gt;'">
       </div>
       <div class="tc-tagline">Handmade with love</div>
     </div>
 
-    <h1 class="tc-h1">Thank you for your purchase</h1>
+    <h1 class="tc-h1 tc-h1--thanks">Thank you for your purchase</h1>
     <p class="tc-sub">Join our little handmade world for future market dates, new crochet drops, craft kits &amp; gentle updates.</p>
 
     <form id="tc-form" novalidate>
@@ -185,7 +188,7 @@
   <!-- ===================== SUCCESS SCREEN ===================== -->
   <div class="tc-card tc-card--done" id="tc-done-screen" hidden>
     <div class="tc-done-logo">
-      <div class="tc-logo" id="tc-logo-done"><div class="tc-logo-fallback">Tianna<br>Crafts</div></div>
+      <div class="tc-logo" id="tc-logo-done"><img src="assets/logo-circle.png" alt="Tianna Crafts"></div>
     </div>
     <h1 class="tc-h1 tc-h1--done">You're on the list, <span id="tc-firstname">friend</span></h1>
     <p class="tc-sub">Thank you again for supporting Tianna Crafts.</p>
@@ -212,16 +215,6 @@
   var resetBtn = document.getElementById('tc-reset');
 
   var subscribe = true;
-
-  // Swap in the real logo if assets/logo.png exists; otherwise keep the text fallback.
-  function tryLogo(container) {
-    var img = new Image();
-    img.onload = function () { container.innerHTML = ''; container.appendChild(img); };
-    img.alt = 'Tianna Crafts';
-    img.src = 'assets/logo.png?v=1';
-  }
-  tryLogo(document.getElementById('tc-logo'));
-  tryLogo(document.getElementById('tc-logo-done'));
 
   function setError(msg) {
     if (msg) { errEl.textContent = msg; errEl.hidden = false; }
